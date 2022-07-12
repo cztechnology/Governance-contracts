@@ -28,9 +28,12 @@ describe("Factory", function () {
       const newProjectName = await controller.projectName();
       expect(newProjectName == projectName, "projectName should be same");
       const moduleFactory = await hre.ethers.getContractFactory("NFT");
+      const governorFactory = await hre.ethers.getContractFactory("Governor");
       const module = await moduleFactory.deploy();
+      const governor = await governorFactory.deploy();
       // console.log(module.address);
       await f.addPlatformModule(moduleName, module.address);
+      await f.addPlatformModule("Governor", governor.address);
       // await f.updateProjectModule(projectName, moduleName, module.address, [], { gasLimit: 3000000 });
     }
   });

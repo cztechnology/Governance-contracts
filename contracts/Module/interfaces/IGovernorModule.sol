@@ -37,17 +37,17 @@ contract GovernorBravoEvents {
     /// @notice An event emitted when a proposal has been executed in the Timelock
     event ProposalExecuted(uint256 id);
 
-    /// @notice An event emitted when the voting delay is set
-    event VotingDelaySet(uint256 oldVotingDelay, uint256 newVotingDelay);
-
-    /// @notice An event emitted when the voting period is set
-    event VotingPeriodSet(uint256 oldVotingPeriod, uint256 newVotingPeriod);
-
     /// @notice Emitted when implementation is changed
     event NewImplementation(address oldImplementation, address newImplementation);
-
     /// @notice Emitted when proposal threshold is set
-    event ProposalThresholdSet(uint256 oldProposalThreshold, uint256 newProposalThreshold);
+    event StrategySet(
+        uint256 proposalThreshold,
+        uint256 votingPeriod,
+        uint256 votingDelay,
+        uint256 quorumVotes,
+        address addr,
+        address strategyReference
+    );
 
     /// @notice Emitted when pendingAdmin is changed
     event NewPendingAdmin(address oldPendingAdmin, address newPendingAdmin);
@@ -174,7 +174,7 @@ contract GovernorBravoDelegateStorageV2 is GovernorBravoDelegateStorageV1 {
     mapping(uint256 => string[]) _signatures;
     mapping(uint256 => bytes[]) _calldatas;
     mapping(bytes32 => Receipt) _receipts;
-    Strategy strategy;
+    Strategy public strategy;
 }
 
 interface TimelockInterface {

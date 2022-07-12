@@ -60,7 +60,7 @@ describe("Greeter", function () {
     datas.push(
       ethers.utils.defaultAbiCoder.encode(
         ["tuple(address,string[],uint256,bool)"],
-        [[other.address, [ipfsUri, ipfsUri], 0, false]]
+        [[buyer.address, [ipfsUri, ipfsUri], 0, false]]
       )
     );
     datas.push(

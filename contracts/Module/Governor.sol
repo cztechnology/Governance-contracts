@@ -60,7 +60,7 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
         uint256 votingPeriod_,
         uint256 votingDelay_,
         uint256 proposalThreshold_,
-        uint quorumVotes
+        uint256 quorumVotes
     ) public  {
         require(address(timelock) == address(0), "Governor::initialize: can only initialize once");
         require(strategyReference_ != address(0), "Governor::initialize: invalid token address");
@@ -87,15 +87,13 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
             votingDelay : votingDelay_,
             proposalThreshold : proposalThreshold_
         });
-        
-        emit VotingPeriodSet(0, votingPeriod_);
-        emit VotingDelaySet(0, votingDelay_);
-        emit ProposalThresholdSet(0, proposalThreshold_);
+        emit StrategySet(proposalThreshold_,votingPeriod_,votingDelay_,quorumVotes,strategy_,strategyReference_);
     }
 
     function setStrategy(Strategy calldata strategy_) external{
         require(msg.sender==address(timelock),"only timelock can set strategy");
         strategy=strategy_;
+        emit StrategySet(strategy.proposalThreshold,strategy.votingPeriod,strategy.votingDelay,strategy.quorumVotes,strategy.addr,strategy.strategyReference);
     }
 
     /**

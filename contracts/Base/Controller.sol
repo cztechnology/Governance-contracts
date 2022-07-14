@@ -16,7 +16,7 @@ contract Controller is IController, AccessControl, Ownable {
     bytes32 public constant PLATFORM_ROLE_ADMIN = keccak256("PlatformRoleAdmin");
     string public projectName;
     address public factoryAddr;
-    string public avatar;
+    string public metadata;
 
     mapping(string => address) private modules;
     string[] private allModules;
@@ -29,16 +29,22 @@ contract Controller is IController, AccessControl, Ownable {
     constructor(
         address owner,
         string memory _projectName,
-        string memory _avatar
+        string memory _metadata
     ) {
         _proxyAdmin = new ProxyAdmin();
         projectName = _projectName;
-        avatar = _avatar;
+        metadata = _metadata;
         factoryAddr = _msgSender();
         _transferOwnership(owner);
         _setRoleAdmin(PLATFORM_ROLE, PLATFORM_ROLE_ADMIN);
         _setupRole(PLATFORM_ROLE, _msgSender());
         _setupRole(PLATFORM_ROLE_ADMIN, _msgSender());
+        emit LogMetedataSet(metadata);
+    }
+
+    function setMetadata(string memory newMetadata) public onlyOwner {
+        metadata = newMetadata;
+        emit LogMetedataSet(metadata);
     }
 
     function transferOwnership(address newOwner) public override onlyOwner {

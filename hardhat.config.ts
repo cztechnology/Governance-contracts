@@ -60,7 +60,7 @@ const config: HardhatUserConfig = {
       },
     },
     localhost: {
-      url: "HTTP://127.0.0.1:8545",
+      url: "HTTP://192.168.3.83:8545",
       accounts: [...(process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []), ...privateKeys],
     },
     gpnode: {

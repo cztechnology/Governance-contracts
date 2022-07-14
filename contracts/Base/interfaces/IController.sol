@@ -17,6 +17,8 @@ interface IController is IAccessControl {
         bytes calldata data
     ) external payable;
 
+    function setMetadata(string memory newMetadata) external;
+
     function getModuleAddr(string calldata moduleName) external view returns (address addr);
 
     // function addExistedModule(string calldata moduleName, address addr)
@@ -25,4 +27,5 @@ interface IController is IAccessControl {
     function getAllModules() external view returns (string[] memory);
 
     event LogModuleUpdated(address controllerAddr, string moduleName, address oldAddr, address newAddr);
+    event LogMetedataSet(string newMetadata);
 }

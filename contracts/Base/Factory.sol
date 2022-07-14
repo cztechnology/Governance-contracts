@@ -13,12 +13,12 @@ contract Factory is IFactory, Ownable {
     function newProject(
         string calldata projectName,
         address owner,
-        string calldata avatar
+        string calldata metadata
     ) external override returns (address) {
         require(projectMap[projectName] == address(0), "project already exist");
-        Controller controller = new Controller(owner, projectName, avatar);
+        Controller controller = new Controller(owner, projectName, metadata);
         projectMap[projectName] = address(controller);
-        emit LogNewProject(projectName, address(controller), avatar);
+        emit LogNewProject(projectName, address(controller), metadata);
         return address(controller);
     }
 

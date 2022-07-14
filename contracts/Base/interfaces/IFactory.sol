@@ -6,7 +6,7 @@ interface IFactory {
     function newProject(
         string calldata projectName,
         address owner,
-        string calldata avatar
+        string calldata metadata
     ) external returns (address);
 
     function addPlatformModule(string calldata moduleName, address implement) external;
@@ -24,6 +24,6 @@ interface IFactory {
         bytes calldata data
     ) external payable;
 
-    event LogNewProject(string projectName, address controllerAddr, string avatar);
+    event LogNewProject(string projectName, address controllerAddr, string metadata);
     event LogModuleAdded(string moduleName, address implement);
 }

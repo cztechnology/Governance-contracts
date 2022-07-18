@@ -48,11 +48,13 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
     }
     /**
      * @notice Used to initialize the contract during delegator contructor
-     * @param strategy_ The address of the strategy
      * @param strategyReference_ The address of the strategy reference
+     * @param strategy_ The address of the strategy
      * @param votingPeriod_ The initial voting period
      * @param votingDelay_ The initial voting delay
      * @param proposalThreshold_ The initial proposal threshold
+     * @param quorumVotes The initial quorum votes
+     * @param timelockDelay The initial timelock delay
      */
     function initialize(
         address strategyReference_,
@@ -60,7 +62,8 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
         uint256 votingPeriod_,
         uint256 votingDelay_,
         uint256 proposalThreshold_,
-        uint256 quorumVotes
+        uint256 quorumVotes,
+        uint256 timelockDelay
     ) public  {
         require(address(timelock) == address(0), "Governor::initialize: can only initialize once");
         require(strategyReference_ != address(0), "Governor::initialize: invalid token address");
@@ -78,7 +81,7 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
             "Governor::initialize: invalid proposal threshold"
         );
         
-        timelock=TimelockInterface(address(new Timelock(address(this), 0)));
+        timelock=TimelockInterface(address(new Timelock(address(this), timelockDelay)));
         strategy = Strategy({
             addr:strategy_,
             strategyReference: strategyReference_,
@@ -114,7 +117,7 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
     ) public returns (uint256) {
         // Allow addresses above proposal threshold and whitelisted addresses to propose
         require(
-            IStrategy(strategy.addr).getPriorVotes(strategy.strategyReference, msg.sender, sub256(block.number, 1)) > strategy.proposalThreshold || isWhitelisted(msg.sender),
+            IStrategy(strategy.addr).getPastVotes(strategy.strategyReference, msg.sender, sub256(block.number, 1)) > strategy.proposalThreshold || isWhitelisted(msg.sender),
             "Governor::propose: proposer votes below proposal threshold"
         );
         require(
@@ -256,13 +259,13 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
             // Whitelisted proposers can't be canceled for falling below proposal threshold
             if (isWhitelisted(proposal.proposer)) {
                 require(
-                    (IStrategy(proposal.strategy.addr).getPriorVotes(proposal.strategy.strategyReference,proposal.proposer, sub256(block.number, 1)) < proposal.strategy.proposalThreshold) &&
+                    (IStrategy(proposal.strategy.addr).getPastVotes(proposal.strategy.strategyReference,proposal.proposer, sub256(block.number, 1)) < proposal.strategy.proposalThreshold) &&
                         msg.sender == whitelistGuardian,
                     "Governor::cancel: whitelisted proposer"
                 );
             } else {
                 require(
-                    (IStrategy(proposal.strategy.addr).getPriorVotes(proposal.strategy.strategyReference,proposal.proposer, sub256(block.number, 1)) < proposal.strategy.proposalThreshold),
+                    (IStrategy(proposal.strategy.addr).getPastVotes(proposal.strategy.strategyReference,proposal.proposer, sub256(block.number, 1)) < proposal.strategy.proposalThreshold),
                     "Governor::cancel: proposer above threshold"
                 );
             }
@@ -392,13 +395,13 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
         address voter,
         uint256 proposalId,
         uint8 support
-    ) internal returns (uint96) {
+    ) internal returns (uint256) {
         require(state(proposalId) == ProposalState.Active, "Governor::castVoteInternal: voting is closed");
         require(support <= 2, "Governor::castVoteInternal: invalid vote type");
         Proposal storage proposal = proposals[proposalId];
         Receipt storage receipt = _receipts[keccak256(abi.encodePacked(proposalId,voter))];
         require(receipt.hasVoted == false, "Governor::castVoteInternal: voter already voted");
-        uint96 votes = IStrategy(proposal.strategy.addr).getPriorVotes(proposal.strategy.strategyReference,voter, proposal.startBlock);
+        uint256 votes = IStrategy(proposal.strategy.addr).getPastVotes(proposal.strategy.strategyReference,voter, proposal.startBlock);
 
         if (support == 0) {
             proposal.againstVotes = add256(proposal.againstVotes, votes);

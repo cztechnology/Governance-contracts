@@ -67,12 +67,17 @@ describe(" Governor 模块测试", () => {
             type: "uint256",
             name: "quorumVotes",
           },
+          {
+            type: "uint256",
+            name: "timelockDelay",
+          },
         ],
       },
       [
         erc20.address,
         strategy.address,
         BigNumber.from(5760).toHexString(),
+        BigNumber.from(0).toHexString(),
         BigNumber.from(0).toHexString(),
         BigNumber.from(0).toHexString(),
         BigNumber.from(0).toHexString(),

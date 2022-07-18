@@ -17,11 +17,11 @@ contract GnosisStrategy is IStrategy {
         return "Gnosis";
     }
 
-    function getPriorVotes(
+    function getPastVotes(
         address ref,
         address account,
         uint256
-    ) external view override returns (uint96) {
+    ) external view override returns (uint256) {
         if (IGnosis(ref).isOwner(account)) {
             return 1;
         } else {

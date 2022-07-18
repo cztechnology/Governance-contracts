@@ -4,9 +4,9 @@ pragma solidity >=0.8.4;
 interface IStrategy {
     function name() external pure returns (string memory);
 
-    function getPriorVotes(
+    function getPastVotes(
         address ref,
         address account,
         uint256 blockNumber
-    ) external view returns (uint96);
+    ) external view returns (uint256);
 }

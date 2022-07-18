@@ -1,12 +1,12 @@
 import "./interfaces/IStrategy.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20VotesComp.sol";
 
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.4;
 
-contract BalanceOfStrategy is IStrategy {
+contract BalanceOfCompStrategy is IStrategy {
     function name() external pure returns (string memory) {
-        return "BalanceOf";
+        return "CompBalanceOf";
     }
 
     function getPastVotes(
@@ -14,6 +14,6 @@ contract BalanceOfStrategy is IStrategy {
         address account,
         uint256 blockNumber
     ) external view override returns (uint256) {
-        return ERC20Votes(ref).getPastVotes(account, blockNumber);
+        return uint256(ERC20VotesComp(ref).getPriorVotes(account, blockNumber));
     }
 }

@@ -21,12 +21,12 @@
           "type": "uint256"
         }
       ],
-      "name": "getPriorVotes",
+      "name": "getPastVotes",
       "outputs": [
         {
-          "internalType": "uint96",
+          "internalType": "uint256",
           "name": "",
-          "type": "uint96"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",

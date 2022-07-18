@@ -40,7 +40,7 @@
         {
           "indexed": false,
           "internalType": "string",
-          "name": "avatar",
+          "name": "metadata",
           "type": "string"
         }
       ],
@@ -136,7 +136,7 @@
         },
         {
           "internalType": "string",
-          "name": "avatar",
+          "name": "metadata",
           "type": "string"
         }
       ],

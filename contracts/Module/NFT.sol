@@ -6,8 +6,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URISto
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 
 contract NFT is INFTLogic, ERC721URIStorageUpgradeable, AccessControlEnumerableUpgradeable {
-    bytes32 public WHITELIST_ROLE = keccak256("WhitelistRole");
-    bytes32 public WHITELIST_ROLE_ADMIN = keccak256("WhitelistRoleAdmin");
+    bytes32 public constant WHITELIST_ROLE = keccak256("WhitelistRole");
+    bytes32 public constant WHITELIST_ROLE_ADMIN = keccak256("WhitelistRoleAdmin");
     address private controllerAddr;
 
     uint256 public currentTimestamp;

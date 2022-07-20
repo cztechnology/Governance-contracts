@@ -13,23 +13,12 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
     /// @notice The name of this contract
     string public constant name = " Governor";
     uint256 private constant DIVISOR= 1e4;
-    /// @notice The minimum setable proposal threshold
-    uint256 public constant MIN_PROPOSAL_THRESHOLD = 0; // 50,000 token
-
-    /// @notice The maximum setable proposal threshold
-    uint256 public constant MAX_PROPOSAL_THRESHOLD = 100000e18; //100,000 token
-
     /// @notice The minimum setable voting period
     uint256 public constant MIN_VOTING_PERIOD = 5760; // About 24 hours
 
     /// @notice The max setable voting period
     uint256 public constant MAX_VOTING_PERIOD = 80640; // About 2 weeks
 
-    /// @notice The min setable voting delay
-    uint256 public constant MIN_VOTING_DELAY = 0;
-
-    /// @notice The max setable voting delay
-    uint256 public constant MAX_VOTING_DELAY = 40320; // About 1 week
 
     /// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed
     // uint256 public constant quorumVotes = 0; // 400,000 = 4% of token
@@ -68,18 +57,6 @@ contract Governor is GovernorBravoDelegateStorageV2, GovernorBravoEvents,IModule
         require(address(timelock) == address(0), "Governor::initialize: can only initialize once");
         require(strategyReference_ != address(0), "Governor::initialize: invalid token address");
         require(strategy_ != address(0), "Governor::initialize: invalid strategy address");
-        require(
-            votingPeriod_ >= MIN_VOTING_PERIOD && votingPeriod_ <= MAX_VOTING_PERIOD,
-            "Governor::initialize: invalid voting period"
-        );
-        require(
-            votingDelay_ >= MIN_VOTING_DELAY && votingDelay_ <= MAX_VOTING_DELAY,
-            "Governor::initialize: invalid voting delay"
-        );
-        require(
-            proposalThreshold_ >= MIN_PROPOSAL_THRESHOLD && proposalThreshold_ <= MAX_PROPOSAL_THRESHOLD,
-            "Governor::initialize: invalid proposal threshold"
-        );
         
         timelock=TimelockInterface(address(new Timelock(address(this), timelockDelay)));
         strategy = Strategy({
